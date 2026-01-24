@@ -1,0 +1,42 @@
+browserstack:
+  username: ${BROWSERSTACK_USERNAME}
+  access_key: ${BROWSERSTACK_ACCESS_KEY}
+
+  project_name: "FashionStack Testathon"
+  build_name: "Percy Visual Regression Build"
+  build_identifier: ${BROWSERSTACK_BUILD_ID}   # optional but recommended
+  session_name: "Percy + Selenium Visual Test"
+
+  # Dashboard enhancements
+  debug: true
+  networkLogs: true
+  video: true
+  consoleLogs: "info"
+
+  # Browsers/devices this test should run on
+  platforms:
+    - os: "Windows"
+      osVersion: "11"
+      browserName: "Chrome"
+      browserVersion: "latest"
+
+    - os: "OS X"
+      osVersion: "Sonoma"
+      browserName: "Safari"
+      browserVersion: "latest"
+
+    - deviceName: "iPhone 15"
+      realMobile: true
+      osVersion: "17"
+
+    - deviceName: "Samsung Galaxy S23"
+      realMobile: true
+      osVersion: "13"
+
+run_settings:
+  test_command: "node percy-login.js"
+  source: "bs-node-sdk"
+  npm_dependencies: true
+
+  # Set to true ONLY if running with BS Local testing
+  browserstack_local: false

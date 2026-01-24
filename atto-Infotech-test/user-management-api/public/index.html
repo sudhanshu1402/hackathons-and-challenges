@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Management System</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+
+  <body>
+    <div class="container">
+      <header>
+        <h1>User Management System</h1>
+        <div id="login-status">
+          <span id="current-user">Not logged in</span>
+          <button id="logout-btn" class="hidden">Logout</button>
+        </div>
+      </header>
+
+      <section id="login-section" class="auth-section">
+        <h2>Login</h2>
+        <form id="login-form">
+          <div class="form-group">
+            <label for="login-email">Email:</label>
+            <input type="email" id="login-email" required />
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password:</label>
+            <input type="password" id="login-password" required />
+          </div>
+          <button type="submit" class="btn primary">Login</button>
+        </form>
+      </section>
+
+      <section id="register-section" class="auth-section">
+        <h2>Register New User</h2>
+        <form id="register-form">
+          <div class="form-group">
+            <label for="register-name">Name:</label>
+            <input type="text" id="register-name" required />
+          </div>
+          <div class="form-group">
+            <label for="register-email">Email:</label>
+            <input type="email" id="register-email" required />
+          </div>
+          <div class="form-group">
+            <label for="register-password">Password:</label>
+            <input
+              type="password"
+              id="register-password"
+              required
+              minlength="6"
+            />
+          </div>
+          <div class="form-group">
+            <label for="register-role">Role:</label>
+            <select id="register-role">
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <button type="submit" class="btn primary">Register</button>
+        </form>
+      </section>
+
+      <section id="user-management-section" class="hidden">
+        <h2>User Management</h2>
+        <div class="controls">
+          <div class="pagination">
+            <button id="prev-page" class="btn">Previous</button>
+            <span id="page-info">Page 1</span>
+            <button id="next-page" class="btn">Next</button>
+          </div>
+          <select id="limit-select">
+            <option value="5">5 per page</option>
+            <option value="10" selected>10 per page</option>
+            <option value="20">20 per page</option>
+          </select>
+        </div>
+        <table id="users-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="users-list">
+            <!-- Users will be loaded here dynamically -->
+          </tbody>
+        </table>
+      </section>
+
+      <section id="edit-user-section" class="hidden">
+        <h2>Edit User</h2>
+        <form id="edit-user-form">
+          <input type="hidden" id="edit-user-id" />
+          <div class="form-group">
+            <label for="edit-name">Name:</label>
+            <input type="text" id="edit-name" required />
+          </div>
+          <div class="form-group">
+            <label for="edit-email">Email:</label>
+            <input type="email" id="edit-email" required />
+          </div>
+          <div class="buttons">
+            <button type="submit" class="btn primary">Save Changes</button>
+            <button type="button" id="cancel-edit" class="btn">Cancel</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="upload-section" class="auth-section">
+        <h2>Upload Users CSV</h2>
+        <form id="upload-form" enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="csv-file">CSV File:</label>
+            <input
+              type="file"
+              id="csv-file"
+              name="file"
+              accept=".csv"
+              required
+            />
+          </div>
+          <button type="submit" class="btn primary">Upload</button>
+        </form>
+      </section>
+
+      <div id="message-container"></div>
+    </div>
+
+    <div class="loading-overlay">
+      <div class="spinner"></div>
+    </div>
+
+    <script src="js/app.js"></script>
+  </body>
+</html>
