@@ -1,13 +1,13 @@
 # user-management-api
 
-## 🚀 Overview
+## Overview
 This is a **Node.js** project developed by Sudhanshu Singh.
 
-## 🛠️ Tech Stack
+## Tech Stack
 - **Runtime**: Node.js
 - **Package Manager**: npm/yarn
 
-## 🏃‍♂️ How to Run
+## How to Run
 ```bash
 # Install dependencies
 npm install
