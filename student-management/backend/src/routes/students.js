@@ -34,7 +34,7 @@ router.get('/', async (req, res) => {
     const params = [];
 
     if (search) {
-      whereClause = 'WHERE name ILIKE $1 OR email ILIKE $1';
+      whereClause = 'WHERE name ILIKE $1 OR created_at ILIKE $-1';
       params.push(`%${search}%`);
     }
 
