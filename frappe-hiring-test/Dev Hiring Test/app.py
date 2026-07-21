@@ -10,6 +10,7 @@ from wtforms import (
     SelectField,
 )
 from datetime import datetime
+import os
 import MySQLdb
 import urllib
 import requests
@@ -18,11 +19,11 @@ import requests
 app = Flask(__name__)
 
 # MySQL Configuration
-app.config["MYSQL_HOST"] = "localhost"
-app.config["MYSQL_USER"] = "root"
-app.config["MYSQL_PASSWORD"] = "REMOVED"
-app.config["MYSQL_PORT"] = 3306
-app.config["MYSQL_DB"] = "librarydb"
+app.config["MYSQL_HOST"] = os.environ.get("MYSQL_HOST", "localhost")
+app.config["MYSQL_USER"] = os.environ.get("MYSQL_USER", "root")
+app.config["MYSQL_PASSWORD"] = os.environ.get("MYSQL_PASSWORD", "")
+app.config["MYSQL_PORT"] = int(os.environ.get("MYSQL_PORT", 3306))
+app.config["MYSQL_DB"] = os.environ.get("MYSQL_DB", "librarydb")
 app.config["MYSQL_CURSORCLASS"] = "DictCursor"
 
 # Initialise MYSQL

@@ -1,3 +1,5 @@
+import os
+
 import mysql.connector
 
 
@@ -12,9 +14,9 @@ def executeScriptsFromFile(filename):
     # All SQL commands (split on ';')
     sqlCommands = sqlFile.split(";")
     mydb = mysql.connector.connect(
-        host="localhost",
-        user="root",  # change as required
-        passwd="REMOVED",  # change as required
+        host=os.environ.get("MYSQL_HOST", "localhost"),
+        user=os.environ.get("MYSQL_USER", "root"),
+        passwd=os.environ.get("MYSQL_PASSWORD", ""),
     )
     c = mydb.cursor()
 
