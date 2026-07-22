@@ -1,70 +1,74 @@
-# Getting Started with Create React App
+# Student Management — Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React single-page app for managing a list of members (students): list, search, paginate, add, edit, and delete. It's the UI half of a two-part project; a separate backend serves the data over a REST API.
 
-## Available Scripts
+## What it does
 
-In the project directory, you can run:
+One screen ("All Members") backed by a Bootstrap table:
 
-### `npm start`
+- **List** members with server-side pagination and a per-page size selector (3, 5, 10, 25, 50, 100).
+- **Search** by typing in the box — the query is passed to the API, and paging resets to page 1.
+- **Add** a member via a modal form (name, email, age, optional parent id).
+- **Edit** a member by clicking their name — same modal, pre-filled.
+- **Delete** a member with a SweetAlert2 confirmation dialog.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Success and error feedback are SweetAlert2 toasts. Form fields use Bootstrap's native `required` validation (name, email, age are required; parent id is optional).
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Stack
 
-### `npm test`
+Bootstrapped with Create React App (`react-scripts` 5). Nothing custom in the build config.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- React 19 (`react`, `react-dom`)
+- `react-bootstrap` + `bootstrap` 5 for layout and components
+- `axios` for HTTP
+- `sweetalert2` for confirm/success/error dialogs
+- `react-icons` (trash icon on the delete button)
+- Testing Library packages are present but only the default CRA smoke test exists
 
-### `npm run build`
+## API it expects
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+All calls go through `src/services/api.js`, hardwired to:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```
+http://localhost:5001/api
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The backend must be running there (or edit `baseURL` in that file). Endpoints used by the UI:
 
-### `npm run eject`
+| Function | Request | Notes |
+|---|---|---|
+| `getStudents(page, limit, search)` | `GET /students?page&limit&search` | expects `{ data: [...], pagination: { totalPages, total } }` |
+| `getStudent(id)` | `GET /students/:id` | expects the student object directly |
+| `createStudent(data)` | `POST /students` | |
+| `updateStudent(id, data)` | `PUT /students/:id` | |
+| `deleteStudent(id)` | `DELETE /students/:id` | |
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+`api.js` also exports `getSubjects` and `createMark` (`GET /subjects`, `POST /marks`), but no component uses them yet — leftovers from a broader schema.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+A member payload looks like:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```js
+{ name: "Ada Lovelace", email: "ada@example.com", age: 30, parent_id: null }
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Build & run
 
-## Learn More
+```bash
+npm install
+npm start      # dev server on http://localhost:3000
+npm run build  # production bundle in ./build
+npm test       # CRA test runner (watch mode)
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Start the backend first, otherwise the table renders "No members found." and errors log to the console.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## Notable bits
 
-### Code Splitting
+- **Pagination window** (`renderPagination` in `StudentList.js`) shows up to 5 numbered pages centered on the current one, plus First/Prev/Next/Last, and clamps the window at both ends of the range.
+- **Search + page-size changes both reset to page 1**, so you don't end up stranded on an out-of-range page.
+- `fetchStudents` is wrapped in `useCallback` keyed on `page`/`limit`/`search`, and the effect re-runs whenever those change — that's the single data-fetch trigger.
+- The modal is one component for both create and edit; `studentId` being set is what flips it into edit mode and triggers the pre-fill fetch.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Scope
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Practice / hackathon project. Single view, no routing, no auth, no state library — the API base URL is a hardcoded localhost string, and the HTML title is still the default "React App". It does the CRUD it sets out to do and nothing more.

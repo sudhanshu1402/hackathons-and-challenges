@@ -1,89 +1,143 @@
 # User Management API
 
-This project is a User Management API built with Node.js, Express, and MySQL. It provides endpoints for user authentication, authorization, and CRUD operations. The API also includes JWT-based authentication, role-based access control, and Swagger documentation.
+A Node.js + Express + MySQL REST API for managing users, with JWT auth, role-based access, CSV bulk import, and a small vanilla-JS web UI on top.
 
-## Table of Contents
+Built as a hackathon/challenge submission (the "atto" user-management challenge). The actual project lives in the [`user-management-api/`](./user-management-api) subfolder.
 
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [API Endpoints](#api-endpoints)
-- [Testing](#testing)
-- [Environment Variables](#environment-variables)
-- [License](#license)
+## What it does
 
-## Features
+- Register users and log them in, returning a signed JWT.
+- CRUD on users, gated by role. Admins can list everyone and delete; regular users can read and update.
+- Bulk-create users by uploading a CSV file (admin only).
+- Passwords are hashed with bcrypt before they hit the database.
+- Ships a static single-page frontend (`public/`) that talks to the same API — login, register, paginated user table, edit/delete buttons, CSV upload.
 
-- User authentication with JWT
-- Role-based access control (admin and user roles)
-- CRUD operations for users
-- CSV upload for bulk user creation
-- Swagger documentation for API endpoints
-- Logging with Winston
-- Error handling middleware
+## Stack
 
-## Installation
+- **Express 4** — HTTP server and routing
+- **MySQL** via `mysql2/promise` — a connection pool, no ORM
+- **jsonwebtoken** — JWTs signed with `JWT_SECRET`, 1-hour expiry
+- **bcryptjs** / **bcrypt** — password hashing (both are installed; the controller uses `bcryptjs`, the login route uses `bcrypt`)
+- **Joi** — request body validation
+- **multer** + **csv-parser** — CSV upload handling
+- **winston** — logging to console and `logs/` files
+- **swagger-jsdoc** + **swagger-ui-express** — API docs
+- **jest** + **supertest** — tests
 
-1. Clone the repository:
+## Two entry points (heads up)
 
-   ```sh
-   git clone https://github.com/your-username/user-management-api.git
-   cd user-management-api
-   ```
+The repo has two server files and they are not identical:
 
-2. Install dependencies:
+- **`server.js`** — what `npm start` runs. Enables CORS, serves the `public/` frontend, mounts `/users`. No Swagger, no winston.
+- **`index.js`** — the `main` in `package.json`. Wires up winston logging middleware and Swagger at `/api-docs`, but does **not** serve the frontend or enable CORS.
 
-   ```sh
-   npm install
-   ```
+So `npm start` gives you the frontend; running `node index.js` gives you the docs and logging. They were never merged into one. If you want everything at once you'll need to combine them.
 
-3. Set up the environment variables. Create a `.env` file in the root directory and add the following variables:
+## Setup
 
-   ```env
-   PORT=3000
-   DB_HOST=your-database-host
-   DB_USER=your-database-user
-   DB_PASSWORD=your-database-password
-   DB_NAME=your-database-name
-   JWT_SECRET=your-jwt-secret
-   ```
+```bash
+cd user-management-api
+npm install
+```
 
-4. Start the server:
+Create a `.env` in `user-management-api/`:
 
-   ```sh
-   npm start
-   ```
+```env
+PORT=3000
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=your-password
+DB_NAME=user_management
+JWT_SECRET=some-long-random-string
+```
 
-5. For development, you can use:
+You need a running MySQL instance with a `users` table:
 
-   ```sh
-   npm run dev
-   ```
+```sql
+CREATE TABLE users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255),
+  email VARCHAR(255),
+  password VARCHAR(255),
+  role VARCHAR(255)
+);
+```
 
-## Usage
+(The test suite creates and drops this table itself; the app does not create it on startup.)
 
-- The API server will be running at `http://localhost:3000`.
-- You can access the Swagger documentation at `http://localhost:3000/api-docs`.
+## Run
 
-## API Endpoints
+```bash
+npm start        # node server.js — API + web UI at http://localhost:3000
+npm run dev      # same, via nodemon
+node index.js    # alternative: adds Swagger UI at /api-docs and winston logging
+```
 
-### Authentication
+## Endpoints
 
-- `POST /users/login`: Authenticate a user and get a JWT token.
+| Method | Path             | Access        | What it does                          |
+|--------|------------------|---------------|---------------------------------------|
+| POST   | `/users/login`   | public        | Log in, returns `{ token }`           |
+| POST   | `/users`         | public        | Create a user, returns user + token   |
+| GET    | `/users`         | admin         | List users, paginated                 |
+| GET    | `/users/:id`     | admin, user   | Get one user                          |
+| PUT    | `/users/:id`     | admin, user   | Update name/email                     |
+| DELETE | `/users/:id`     | admin         | Delete a user                         |
+| POST   | `/users/upload`  | admin         | Bulk-create from an uploaded CSV      |
 
-### Users
+Auth is a bearer token: `Authorization: Bearer <token>`.
 
-- `POST /users`: Create a new user.
-- `GET /users`: Get all users (admin only).
-- `GET /users/:id`: Get a user by ID.
-- `PUT /users/:id`: Update a user by ID.
-- `DELETE /users/:id`: Delete a user by ID (admin only).
-- `POST /users/upload`: Upload users from a CSV file (admin only).
+## Example
 
-## Testing
+Create a user (no auth needed on POST `/users`):
 
-To run the tests, use the following command:
+```bash
+curl -X POST http://localhost:3000/users \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Admin User","email":"admin@example.com","password":"password123","role":"admin"}'
+```
 
-```sh
+Log in:
+
+```bash
+curl -X POST http://localhost:3000/users/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@example.com","password":"password123"}'
+# -> {"token":"eyJhbGci..."}
+```
+
+List users with that token:
+
+```bash
+curl http://localhost:3000/users?page=1&limit=10 \
+  -H "Authorization: Bearer eyJhbGci..."
+```
+
+CSV upload expects a multipart field named `file`, with columns `name,email,password,role`. Invalid rows are skipped, valid ones inserted, and the temp file is deleted after processing.
+
+## Tests
+
+```bash
 npm test
 ```
+
+`test.js` is a supertest/jest suite covering create, list, get-by-id, update, delete, 404, and 400-on-invalid-input. It hits a **real** MySQL database — it creates the `users` table in `beforeAll` and drops it in `afterAll`, so a working DB connection and valid `.env` are required for the tests to pass.
+
+## Notable details
+
+- **Pagination** on `GET /users` via `?page` and `?limit`, returning `{ total, page, limit, users }`.
+- **Validation** with Joi: name required, valid email, password min 6 chars, role must be `admin` or `user`. Create-user reports all errors at once (`abortEarly: false`); update requires at least one field.
+- **SQL** uses parameterized queries throughout, so injection isn't an issue on these paths.
+- The frontend reads the JWT payload client-side (`atob` on the middle segment) just to show the current role — it does not verify the signature, which is fine since that's the server's job.
+
+## Honest scope
+
+This is a learning / challenge project, not production code. A few rough edges worth knowing:
+
+- Two divergent server files (see above); neither is the single source of truth.
+- Two bcrypt libraries installed for the same purpose.
+- `GET /users` returns only `id, name, email` — a plain `SELECT` with `LIMIT ?/OFFSET ?`.
+- No refresh tokens, no rate limiting, no email-uniqueness constraint enforced in code (relies on the DB schema if you add one).
+- `POST /users` is public, so anyone can self-register as `admin` by passing `"role":"admin"`.
+
+Good as a reference for wiring Express + MySQL + JWT + Joi together, not for shipping as-is.

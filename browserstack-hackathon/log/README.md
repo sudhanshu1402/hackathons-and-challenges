@@ -1,13 +1,17 @@
 # log
 
-## Overview
-This is a **Generic** project developed by Sudhanshu Singh.
+Empty scratch/output folder from the BrowserStack Testathon experiment in the parent directory.
 
-## Tech Stack
-- Generic
+## What's actually here
 
-## How to Run
-Check the source code for specific running instructions.
+Nothing but a placeholder. The folder holds a single empty `dummy.txt` (a keeper file so the directory survives in git) and this README. There is no code, config, or captured output in it.
 
----
-*Generated automatically as part of the Sudhanshu1402 Portfolio Revamp.*
+## Why it exists
+
+The BrowserStack automation lives one level up (`../bs-automate-login.js`, `../percy-login.js`, `../browserstack.yml`). Those scripts write their debug artifacts — screenshots and full page dumps — via `path.resolve()`, which drops them into the current working directory, not here. So the debug PNGs and HTML page dumps you'll find in the parent folder were never routed into this `log/` directory.
+
+In short: this was set aside as a place to collect run logs and never got wired up. It's kept for archival tidiness.
+
+## If you want to use it
+
+Point the artifact writer at this folder by changing the parent's `saveDebugArtifacts` to resolve paths against `log/`, e.g. `path.resolve(__dirname, "log", filename)` in `../bs-automate-login.js`.
