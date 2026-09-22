@@ -41,6 +41,6 @@ CREATE TABLE `librarytestdb`.`transactions` (
 INSERT INTO `books` (`id`, `title`, `author`, `average_rating`, `isbn`, `isbn13`, `language_code`, `num_pages`, `ratings_count`, `text_reviews_count`, `publication_date`, `publisher`, `total_quantity`, `available_quantity`, `rented_count`) VALUES
 (1, 'A Man Called Ove', 'Fredrik Backman', 4.5, '1476738017', '9781476738017', 'ENG', 337, 600, 300, '2012-08-01', 'Atria Books', 20, 20, 1);
 INSERT INTO `members` (`id`, `name`, `email`, `registered_on`, `outstanding_debt`, `amount_spent`) VALUES
-(1, 'Mitul David', 'mituldavid@gmail.com', '2021-06-14 11:23:01', 15, 50);
+(1, 'Mitul David', 'mitul.david@example.com', '2021-06-14 11:23:01', 15, 50);
 INSERT INTO `transactions` (`id`, `book_id`, `member_id`, `per_day_fee`, `borrowed_on`, `returned_on`, `total_charge`, `amount_paid`) VALUES
 (1, 1, 1, 5, '2021-06-01 11:49:12', '2021-06-14 11:52:44', 65, 50);
