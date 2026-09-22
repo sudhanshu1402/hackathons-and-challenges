@@ -26,7 +26,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Qa Nadsoft\",\n  \"email\": \"qa+upil-test-client-4@nadsoftdev.com\",\n  \"age\": 28,\n  \"parent_id\": null\n}"
+              "raw": "{\n  \"name\": \"Qa Nadsoft\",\n  \"email\": \"qa@example.com\",\n  \"age\": 28,\n  \"parent_id\": null\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/students",
