@@ -16,7 +16,7 @@ const es = new EsClient({
   node: process.env.ELASTICSEARCH_URL,
 });
 
-// Explicit shape — no SELECT * leaking unknown columns
+// Explicit shape - no SELECT * leaking unknown columns
 function transformRow(row) {
   return {
     id: row.id,
@@ -38,13 +38,13 @@ async function bulkIndex(docs) {
   ]);
 
   const { errors, items } = await es.bulk({
-    refresh: false, // never force refresh per batch — kills ES performance
+    refresh: false, // never force refresh per batch - kills ES performance
     operations,
   });
 
   if (!errors) return 0;
 
-  // bulk() never throws on partial failure — must inspect items manually
+  // bulk() never throws on partial failure - must inspect items manually
   const failed = items.filter((item) => item.index?.error);
   failed.forEach((item) =>
     console.error("ES index error:", JSON.stringify(item.index?.error))
@@ -84,7 +84,7 @@ async function main() {
 
     await ensureIndex();
 
-    // Paginate — never load full table into memory
+    // Paginate - never load full table into memory
     let offset = 0;
     let totalIndexed = 0;
     let totalFailed = 0;
@@ -112,7 +112,7 @@ async function main() {
       console.log(`Processed ${offset} rows | failed so far: ${totalFailed}`);
     }
 
-    console.log(`\nIngestion complete — indexed: ${totalIndexed}, failed: ${totalFailed}`);
+    console.log(`\nIngestion complete - indexed: ${totalIndexed}, failed: ${totalFailed}`);
 
     // Refresh once after all batches so documents are queryable
     await es.indices.refresh({ index: INDEX_NAME });
@@ -139,7 +139,7 @@ async function main() {
     process.exit(1);
   } finally {
     await pg.end();
-    await es.close(); // was missing in original — prevents hanging process
+    await es.close(); // was missing in original - prevents hanging process
   }
 }
 

@@ -1,4 +1,4 @@
-// Money is always integer minor units (e.g. paise) — never a float.
+// Money is always integer minor units (e.g. paise) - never a float.
 // Assumption (see SUBMISSION.md): gateway boundary converts to whatever the real API expects.
 export type MinorUnits = number;
 
@@ -20,7 +20,7 @@ export interface Withdrawal {
   idempotencyKey: string;
   amount: MinorUnits;
   status: WithdrawalStatus;
-  // null until the debit succeeds — the row is inserted (claiming the
+  // null until the debit succeeds - the row is inserted (claiming the
   // idempotency key) before the debit is attempted, so this is unknown yet.
   balanceAfter: MinorUnits | null;
   gatewayReference: string;
@@ -43,7 +43,7 @@ export interface WithdrawRequest {
   idempotencyKey: string;
 }
 
-// Populated by auth middleware — never trust req.body for identity.
+// Populated by auth middleware - never trust req.body for identity.
 export interface AuthedRequest {
   auth: { userId: string };
   body: WithdrawRequest;

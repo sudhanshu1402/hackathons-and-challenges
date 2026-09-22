@@ -67,7 +67,7 @@ export default function Reports() {
   }, [overview]);
 
   const statCards = [
-    { label: 'Total people', value: overview?.total ?? '—' },
+    { label: 'Total people', value: overview?.total ?? '-' },
     { label: 'Male', value: overview?.gender?.male ?? 0 },
     { label: 'Female', value: overview?.gender?.female ?? 0 },
     { label: 'Other/Unknown', value: (overview?.total ?? 0) - ((overview?.gender?.male ?? 0) + (overview?.gender?.female ?? 0)) },
@@ -125,7 +125,7 @@ export default function Reports() {
             <h2 className="text-3xl font-semibold">Insight Dashboard</h2>
             <p className="text-sm text-white/90">Live filters + charts for gender, age, blood group, location, and qualifications.</p>
             <div className="flex items-center gap-2 flex-wrap pt-1">
-              <span className="badge bg-white/90 text-slate-800">{overview?.total ?? '—'} people</span>
+              <span className="badge bg-white/90 text-slate-800">{overview?.total ?? '-'} people</span>
               <span className="pill bg-white/15 text-white border-white/30">Auto-refresh on filter change</span>
             </div>
           </div>
@@ -295,12 +295,12 @@ export default function Reports() {
                   {selectedPerson.bloodGroup && <span className="pill text-xs">{selectedPerson.bloodGroup}</span>}
                 </div>
                 <div className="grid gap-2 md:grid-cols-2 mt-3 text-sm text-slate-700">
-                  <div><span className="text-slate-500">Gender:</span> {selectedPerson.gender || '—'}</div>
-                  <div><span className="text-slate-500">Marital:</span> {selectedPerson.maritalStatus || '—'}</div>
-                  <div><span className="text-slate-500">Profession:</span> {selectedPerson.profession || '—'}</div>
-                  <div><span className="text-slate-500">Location:</span> {selectedPerson.location || '—'}</div>
-                  <div><span className="text-slate-500">Sampraday:</span> {selectedPerson.sampraday || '—'}</div>
-                  <div><span className="text-slate-500">Connect #:</span> {selectedPerson.nbSerialNumber || '—'}</div>
+                  <div><span className="text-slate-500">Gender:</span> {selectedPerson.gender || '-'}</div>
+                  <div><span className="text-slate-500">Marital:</span> {selectedPerson.maritalStatus || '-'}</div>
+                  <div><span className="text-slate-500">Profession:</span> {selectedPerson.profession || '-'}</div>
+                  <div><span className="text-slate-500">Location:</span> {selectedPerson.location || '-'}</div>
+                  <div><span className="text-slate-500">Sampraday:</span> {selectedPerson.sampraday || '-'}</div>
+                  <div><span className="text-slate-500">Connect #:</span> {selectedPerson.nbSerialNumber || '-'}</div>
                 </div>
               </div>
             )}

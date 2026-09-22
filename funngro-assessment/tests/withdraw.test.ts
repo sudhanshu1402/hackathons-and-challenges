@@ -3,10 +3,10 @@ import { Collections, DuplicateKeyError } from '../src/db';
 import { PayoutQueue } from '../src/gateway';
 import { LedgerEntry, User, Wallet, Withdrawal } from '../src/types';
 
-// Mocked collections — see db.ts for why (fast, no real Mongo dependency).
+// Mocked collections - see db.ts for why (fast, no real Mongo dependency).
 // Wallets.findOneAndUpdate and Withdrawals.insertOne below have NO internal
 // `await`, so each one's check-then-mutate body always runs to completion
-// before yielding to the event loop — this is what makes the "concurrent
+// before yielding to the event loop - this is what makes the "concurrent
 // requests" tests below a real proof of the atomic-guard / claim-key-first
 // fixes, not just a logic smoke test.
 function makeCollections(initial: { users: User[]; wallets: Wallet[] }) {
@@ -39,7 +39,7 @@ function makeCollections(initial: { users: User[]; wallets: Wallet[] }) {
         return withdrawalsByKey.get(filter.idempotencyKey) ?? null;
       },
       async insertOne(doc) {
-        // Mirrors a unique index on idempotencyKey — this check-and-set has
+        // Mirrors a unique index on idempotencyKey - this check-and-set has
         // no await inside it, so it can't be interleaved by a concurrent call.
         if (withdrawalsByKey.has(doc.idempotencyKey)) {
           throw new DuplicateKeyError('idempotencyKey');
@@ -101,7 +101,7 @@ function makeDeps(collections: Collections, queue: PayoutQueue) {
   };
 }
 
-describe('withdraw handler — money safety', () => {
+describe('withdraw handler - money safety', () => {
   test('debits balance and returns pending on a valid withdrawal', async () => {
     const { collections, wallets } = makeCollections({
       users: [{ _id: 'u1', bankAccount: 'acc-1' }],
@@ -182,7 +182,7 @@ describe('withdraw handler — money safety', () => {
     expect(res1.body).toEqual(res2.body);
   });
 
-  test('two concurrent requests with the SAME idempotencyKey debit only once (bug #1/#3 — claim-key-before-debit)', async () => {
+  test('two concurrent requests with the SAME idempotencyKey debit only once (bug #1/#3 - claim-key-before-debit)', async () => {
     const { collections, wallets } = makeCollections({
       users: [{ _id: 'u1', bankAccount: 'acc-1' }],
       wallets: [{ userId: 'u1', balance: 1000 }],
@@ -207,7 +207,7 @@ describe('withdraw handler — money safety', () => {
     expect(resA.body).toEqual(resB.body); // both callers see the same outcome
   });
 
-  test('two concurrent requests with DIFFERENT idempotency keys cannot both debit past the balance guard (bug #1 — TOCTOU race)', async () => {
+  test('two concurrent requests with DIFFERENT idempotency keys cannot both debit past the balance guard (bug #1 - TOCTOU race)', async () => {
     const { collections, wallets } = makeCollections({
       users: [{ _id: 'u1', bankAccount: 'acc-1' }],
       wallets: [{ userId: 'u1', balance: 500 }],
@@ -218,7 +218,7 @@ describe('withdraw handler — money safety', () => {
     const resA = makeRes();
     const resB = makeRes();
 
-    // Two distinct legitimate requests racing — not a retry, which is
+    // Two distinct legitimate requests racing - not a retry, which is
     // covered by the same-key tests above.
     await Promise.all([
       handler({ auth: { userId: 'u1' }, body: { amount: 300, idempotencyKey: 'a' } } as any, resA),

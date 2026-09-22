@@ -1,10 +1,10 @@
-// Part 2b — monthly finance report: per user (and cohort), points earned,
-// converted, expired in a given month. Real aggregation shape — runnable
+// Part 2b - monthly finance report: per user (and cohort), points earned,
+// converted, expired in a given month. Real aggregation shape - runnable
 // against a `pointsLedger` collection with the schema in schema.ts.
 
 export function monthlyPointsReportPipeline(monthStart: Date, monthEnd: Date) {
   return [
-    // Uses the standalone {createdAt:1} index from schema.ts — this stage
+    // Uses the standalone {createdAt:1} index from schema.ts - this stage
     // has no userId/cohort equality filter, so the {userId,createdAt} and
     // {cohort,createdAt} compound indexes (which serve narrower per-user /
     // per-cohort lookups) can't be seeked by a bare date-range scan.

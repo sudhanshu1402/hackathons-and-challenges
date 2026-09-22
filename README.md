@@ -9,9 +9,9 @@ Every subfolder has its own README with full setup and run instructions. This pa
 | Project | What it is | Stack |
 |---------|------------|-------|
 | [atto-user-management-api](./atto-user-management-api) | REST User Management API with JWT auth, admin/user roles, user CRUD, bulk CSV upload, and Swagger docs | Node.js, Express, MySQL, JWT, Winston, Jest |
-| [browserstack-hackathon](./browserstack-hackathon) | Visual regression testing ("FashionStack Testathon") — Percy snapshots driven by Selenium/Playwright against a demo e-commerce site, run across BrowserStack's browser/device grid | Selenium WebDriver, Playwright, Percy, BrowserStack |
+| [browserstack-hackathon](./browserstack-hackathon) | Visual regression testing ("FashionStack Testathon") - Percy snapshots driven by Selenium/Playwright against a demo e-commerce site, run across BrowserStack's browser/device grid | Selenium WebDriver, Playwright, Percy, BrowserStack |
 | [exordiom-assessment](./exordiom-assessment) | Debugging challenge: fix three regressions in an async order-processing microservice (boot crash, inventory overselling under concurrency, hung workers on failure) without rewriting it | Python 3.12, asyncio, Docker |
-| [frappe-hiring-test](./frappe-hiring-test) | Library management web app for the Frappe dev hiring test — track books and quantity, members, and issue/return transactions | Flask, Jinja, MySQL |
+| [frappe-hiring-test](./frappe-hiring-test) | Library management web app for the Frappe dev hiring test - track books and quantity, members, and issue/return transactions | Flask, Jinja, MySQL |
 | [funngro-assessment](./funngro-assessment) | Backend take-home: review and rewrite a payout/withdraw handler (idempotency, race safety, gateway off the request path), design a reward-points schema, and write up a production incident | TypeScript, Node.js, MongoDB, Jest |
 | [people-management-system](./people-management-system) | Full-stack people directory with JWT/role-based access, people CRUD + search/filter, Excel/CSV import-export, PDF/Excel reports, and Google Drive backup/restore | TypeScript, Express, Prisma, PostgreSQL, React, Vite, Tailwind, Recharts |
 | [postgres-elasticsearch-etl](./postgres-elasticsearch-etl) | Backend interview task: read orders from Postgres, transform to a fixed document schema, index into Elasticsearch (`orders_v1`) idempotently, then run a search query | Node.js, PostgreSQL, Elasticsearch, Docker Compose |
@@ -19,7 +19,7 @@ Every subfolder has its own README with full setup and run instructions. This pa
 
 ## How it's organized
 
-Flat — one folder per submission. There's no shared build or common tooling; each project stands alone. `people-management-system` and `student-management` split into `backend/` and `frontend/` subfolders.
+Flat - one folder per submission. There's no shared build or common tooling; each project stands alone. `people-management-system` and `student-management` split into `backend/` and `frontend/` subfolders.
 
 ## Notes
 

@@ -251,7 +251,7 @@ export default function People() {
         <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <div>
             <h3 className="text-lg font-semibold text-slate-900">Directory</h3>
-            <p className="text-sm text-slate-600">{loading ? 'Loading people…' : `Showing ${people.length} of ${total || '—'}`}</p>
+            <p className="text-sm text-slate-600">{loading ? 'Loading people…' : `Showing ${people.length} of ${total || '-'}`}</p>
           </div>
           <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500">
             <span className="pill">Page {page} / {totalPages}</span>
@@ -465,10 +465,10 @@ export default function People() {
                       {family.members.map(m => (
                         <tr key={m.id}>
                           <td>{`${m.firstName} ${m.middleName || ''} ${m.lastName}`.trim()}</td>
-                          <td>{m.relation || '—'}</td>
-                          <td>{m.gender || '—'}</td>
+                          <td>{m.relation || '-'}</td>
+                          <td>{m.gender || '-'}</td>
                           <td>{m.bloodGroup}</td>
-                          <td>{m.dateOfBirth ? m.dateOfBirth.slice(0,10) : '—'}</td>
+                          <td>{m.dateOfBirth ? m.dateOfBirth.slice(0,10) : '-'}</td>
                           <td>{m.location}</td>
                         </tr>
                       ))}
