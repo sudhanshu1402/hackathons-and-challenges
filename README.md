@@ -1,4 +1,8 @@
-# Hackathons & Challenges
+<div align="center">
+
+<img src="assets/hero.svg" width="100%" alt="Hackathons and challenges as a departures board: eight submissions, from atto-user-management-api to student-management, each with its stack and the status SUBMITTED. Hiring tests, timed assessments and one hackathon, archived as submitted." />
+
+</div>
 
 Archived submissions for hiring tests, timed coding assessments, and one hackathon. Each folder is a self-contained project built to solve a specific prompt from a company or event, not a maintained product. Stacks vary by whatever the brief asked for.
 
@@ -26,3 +30,7 @@ Flat - one folder per submission. There's no shared build or common tooling; eac
 - These are time-boxed deliverables. Scope, polish, and test coverage reflect what each prompt asked for, not production standards.
 - Some briefs are reproduced verbatim inside the folders: `exordiom-assessment/instruction.md` (the QA bug report) and `postgres-elasticsearch-etl/README.md` (the candidate instructions with the required Elasticsearch schema).
 - Debug artifacts under `browserstack-hackathon/` (`bs-debug-*` screenshots and page dumps) are gitignored at the repo root.
+
+---
+
+<sub>More from [sudhanshu1402](https://github.com/sudhanshu1402): [keel](https://github.com/sudhanshu1402/keel) · [nocap](https://github.com/sudhanshu1402/nocap) · [receipts](https://github.com/sudhanshu1402/receipts) · [enterprise-auth-stack](https://github.com/sudhanshu1402/enterprise-auth-stack) · [distributed-queue-engine](https://github.com/sudhanshu1402/distributed-queue-engine) · [multi-region-mongo-patterns](https://github.com/sudhanshu1402/multi-region-mongo-patterns) · [otel-sdk-node](https://github.com/sudhanshu1402/otel-sdk-node) · [llm-assessment-pipeline](https://github.com/sudhanshu1402/llm-assessment-pipeline) · [system-design-portal](https://github.com/sudhanshu1402/system-design-portal). Portfolio: [sudhanshu1402.github.io](https://sudhanshu1402.github.io).</sub>
